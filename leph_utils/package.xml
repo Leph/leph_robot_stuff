@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>leph_utils</name>
+    <version>0.0.0</version>
+    <description>
+        Various utility tools
+    </description>
+    <maintainer email="leph.quentinrouxel@gmail.com">Quentin Rouxel</maintainer>
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>rospack</depend>
+    <depend>roscpp</depend>
+</package>
