@@ -105,6 +105,12 @@ class FilterPoseCommand
     private:
 
         /**
+         * If false, raw input pose offset will be 
+         * initialized at next update() call
+         */
+        bool _isInitialized;
+
+        /**
          * If true, commands are assmed to be in local 
          * effector frame, else in world frame
          */

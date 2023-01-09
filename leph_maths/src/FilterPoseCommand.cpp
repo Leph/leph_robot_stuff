@@ -5,6 +5,7 @@
 namespace leph {
 
 FilterPoseCommand::FilterPoseCommand() :
+    _isInitialized(false),
     _isLocalFrame(false),
     _clampRadiusLin(),
     _clampRadiusAng(),
@@ -53,6 +54,12 @@ void FilterPoseCommand::update(
     const Eigen::Vector3d& centerPos,
     const Eigen::Matrix3d& centerMat)
 {
+    //Initial input offset initialization
+    if (!_isInitialized) {
+        _poseProcessing.posOffset = rawPos;
+        _poseProcessing.matOffset = rawMat;
+        _isInitialized = true;
+    }
     //Integrate the anchor pose and the raw pose clutch is released
     if (!isClutch && _poseProcessing.isIntegrating) {
         _anchorPos = _targetPos;
@@ -144,6 +151,8 @@ void FilterPoseCommand::reset(
     const Eigen::Vector3d& pos,
     const Eigen::Matrix3d& mat)
 {
+    _isInitialized = false;
+    _poseProcessing.isIntegrating = false;
     _anchorPos = pos;
     _anchorMat = mat;
     _targetPos = pos;
