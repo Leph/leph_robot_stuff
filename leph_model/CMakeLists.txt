@@ -7,7 +7,6 @@ find_package(catkin REQUIRED
     leph_maths
     leph_plot
     leph_utils
-    mobydrakelcp
 )
 find_package(Eigen3 REQUIRED)
 find_package(pinocchio REQUIRED)
@@ -21,7 +20,6 @@ catkin_package(
         leph_maths
         leph_plot
         leph_utils
-        mobydrakelcp
 )
 
 include_directories(
@@ -42,7 +40,6 @@ add_library(${PROJECT_NAME}
     src/InverseKinematics.cpp
     src/ModelHumanoidFixed.cpp
     src/ForwardSimulation.cpp
-    src/RBDLContactLCP.cpp
     src/InverseDynamics.cpp
     src/InverseDynamicsSimplified.cpp
     src/MultiContactIKStaticID.cpp

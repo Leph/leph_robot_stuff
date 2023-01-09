@@ -4,7 +4,6 @@
 #include <cmath>
 #include <leph_model/Model.hpp>
 #include <leph_model/RBDLRootUpdate.h>
-#include <leph_model/RBDLContactLCP.h>
 #include <leph_maths/Skew.h>
 #include <rbdl/addons/urdfreader/urdfreader.h>
 #include <urdf/model.h>
@@ -1782,27 +1781,6 @@ Eigen::VectorXd Model::impulseContacts(
     _isDirty = true;
 
     return newVel;
-}
-
-void Model::solveContactConstraintLCP(
-    RBDL::ConstraintSet& constraints,
-    const Eigen::VectorXi& isBilateralConstraint,
-    const Eigen::VectorXd& position,
-    const Eigen::VectorXd& velocity,
-    const Eigen::VectorXd& torque)
-{
-    RBDLContactLCP(
-        _model, 
-        position, 
-        velocity, 
-        torque, 
-        constraints,
-        isBilateralConstraint);
-    
-    //RBDL Dynamics functions update internal
-    //model state. An updateState() is required to
-    //enforce correctness of kinematics functions.
-    _isDirty = true;
 }
 
 double Model::getBodyMass(size_t frameId) const

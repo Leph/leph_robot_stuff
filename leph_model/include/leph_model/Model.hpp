@@ -833,39 +833,6 @@ class Model
             const Eigen::VectorXd& velocity);
         
         /**
-         * Use RBDLContactLCP and Drake-Moby
-         * LCP solver to compute the active and
-         * releasing contact constraints.
-         * WARNING: Internal RBDL model position or velocity 
-         * state are updated. A call to updateState()
-         * is required.
-         *
-         * @param constraints RBDL ConstraintSet with
-         * defined constraints to be determined.
-         * Computed Cartesian contact forces 
-         * (zeros and non zeros) are assigned 
-         * to ConstraintSet force attribute.
-         * @param isBilateralConstraint Provides 
-         * for each constraint a boolean (non zero) 
-         * if the associated constraint is an (bilateral)
-         * equality (no-slip infinite friction).
-         * @param position Used degrees of freedom position 
-         * vector including floating base quaternion (sizeVectPos()).
-         * @param velocity Used degrees of freedom velocity
-         * vector (sizeVectVel()). Given velocity must
-         * comply with the declared constraints 
-         * (impulses must have been applied if needed).
-         * @param torque Used degrees of freedom torque
-         * vector (sizeVectVel).
-         */
-        void solveContactConstraintLCP(
-            RBDL::ConstraintSet& constraints,
-            const Eigen::VectorXi& isBilateralConstraint,
-            const Eigen::VectorXd& position,
-            const Eigen::VectorXd& velocity,
-            const Eigen::VectorXd& torque);
-
-        /**
          * Retrieve a body model mass and center of mass.
          *
          * @param frameId, frameName The link given by 

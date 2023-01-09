@@ -16,5 +16,4 @@
     <depend>leph_maths</depend>
     <depend>leph_plot</depend>
     <depend>leph_utils</depend>
-    <depend>mobydrakelcp</depend>
 </package>
