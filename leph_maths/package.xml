@@ -11,5 +11,4 @@
     <buildtool_depend>catkin</buildtool_depend>
     <depend>leph_plot</depend>
     <depend>leph_utils</depend>
-    <depend>mkfilter_catkin</depend>
 </package>

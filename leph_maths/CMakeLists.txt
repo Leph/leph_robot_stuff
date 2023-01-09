@@ -4,7 +4,6 @@ project(leph_maths)
 find_package(catkin REQUIRED
     leph_plot
     leph_utils
-    mkfilter_catkin
 )
 find_package(Eigen3 REQUIRED)
 
@@ -14,7 +13,6 @@ catkin_package(
     CATKIN_DEPENDS 
         leph_plot
         leph_utils
-        mkfilter_catkin
 )
 
 include_directories(
@@ -32,7 +30,6 @@ add_library(${PROJECT_NAME}
     src/SplineCubic.cpp
     src/SplineQuintic.cpp
     src/LinearRegression.cpp
-    src/Sylvester.cpp
     src/PolyFit.cpp
     src/Polytope.cpp
     src/RecursiveLeastSquares.cpp
@@ -43,7 +40,6 @@ add_library(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES} 
-    lapack
 )
 
 #Test names
@@ -51,8 +47,6 @@ set(TESTS_FILES
     testTimeSeries
     testLinearRegression
     testAutoRegressive
-    testQPDiff
-    testSylvester
     testFilters
     testControllerProportionalBarrier
     testRLS
