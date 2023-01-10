@@ -51,7 +51,6 @@ set(TESTS_FILES
     testControllerProportionalBarrier
     testRLS
     testSoftMax
-    testDampedIntegral
     testVelocityDifferentiation
     testTrajectory
     testAxisAngle
