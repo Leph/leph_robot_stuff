@@ -6,7 +6,7 @@ find_package(catkin REQUIRED
     rhio_common
     rhio_client
     leph_plot
-    lepg_utils
+    leph_utils
 )
 find_package(Eigen3 REQUIRED)
 
@@ -51,7 +51,17 @@ target_link_libraries(rhioCursesLog
     ncurses
 )
 
+add_executable(rhioCursesServer
+    bin/rhioCursesServer.cpp
+)
+target_link_libraries(rhioCursesServer
+    ${PROJECT_NAME}
+    ${catkin_LIBRARIES}
+    ncurses
+)
+
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 install(TARGETS rhioCursesLog DESTINATION bin)
+install(TARGETS rhioCursesServer DESTINATION bin)
 
