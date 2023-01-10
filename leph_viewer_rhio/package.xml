@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>leph_viewer_rhio</name>
+    <version>0.0.0</version>
+    <description>
+        Viewer and interface using RhIO 
+        to connect to the running main controller
+    </description>
+    <maintainer email="leph.quentinrouxel@gmail.com">Quentin Rouxel</maintainer>
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>libzmq_catkin</depend>
+    <depend>rhio_common</depend>
+    <depend>rhio_client</depend>
+    <depend>leph_plot</depend>
+    <depend>leph_utils</depend>
+</package>
