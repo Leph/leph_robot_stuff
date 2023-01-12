@@ -24,13 +24,17 @@ class ViveTracking
          * data of Controller devices
          */
         struct Device_t {
+            //Vive last sequence number
+            uint32_t seq;
             //Vive and local timestamp of last received pose
             ros::Time timeVive;
             ros::Time timeLocal;
             //Measured raw pose in world
             Eigen::Vector3d posRaw;
             Eigen::Matrix3d matRaw;
-            //Is the pose valid and updated
+            //Is the last received pose valid
+            bool isLastValid;
+            //Is the pose valid, fresh and updated
             bool isValid;
             //Is the buttons pushed
             bool isButtonTrigger;
@@ -39,6 +43,9 @@ class ViveTracking
             //Pose of hand on the controller handle in world
             Eigen::Vector3d posHand;
             Eigen::Matrix3d matHand;
+            //Vive time at last transition 
+            //from not valid to valid
+            ros::Time timeViveAtValid;
         };
 
         /**
@@ -71,9 +78,11 @@ class ViveTracking
         bool isInit() const;
 
         /**
-         * Receive data and update processing
+         * Receive data and update processing.
+         *
+         * @return true if pose data has been updated.
          */
-        void update();
+        bool update();
 
         /**
          * Access to raw and processed data structure
@@ -93,6 +102,11 @@ class ViveTracking
          * Data container
          */
         std::map<std::string, Device_t> _container;
+
+        /**
+         * True if device data has been updated during update()
+         */
+        bool _isUpdated;
 };
 
 }
