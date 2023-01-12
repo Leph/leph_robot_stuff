@@ -9,7 +9,8 @@ ViveTracking::ViveTracking() :
     _handle(nullptr),
     _subPose(),
     _subJoy(),
-    _container()
+    _container(),
+    _isUpdated(false)
 {
 }
         
@@ -104,6 +105,8 @@ bool ViveTracking::init(
                 if (_container.count(label) == 0) {
                     _container.insert(std::make_pair(label, Device_t()));
                     Device_t& devInit = _container.at(label);
+                    devInit.isLastValid = false;
+                    devInit.isValid = false;
                     devInit.isButtonTrigger = false;
                     devInit.isButtonPad = false;
                     devInit.isButtonGrip = false;
@@ -112,18 +115,24 @@ bool ViveTracking::init(
                 }
                 //Assign data
                 Device_t& dev = _container.at(label);
+                dev.seq = msg->header.seq;
                 dev.timeVive.sec = timeSec;
                 dev.timeVive.nsec = timeNSec;
                 dev.timeLocal = ros::Time::now();
                 dev.posRaw = pos;
                 dev.matRaw = mat;
-                dev.isValid = 
+                bool isLastValid = 
                     isConnected && isPoseValid && (resultTracking == 200);
+                if (!dev.isLastValid && isLastValid) {
+                    dev.timeViveAtValid = dev.timeVive;
+                }
+                dev.isLastValid = isLastValid;
+                _isUpdated = true;
             }
         }
     };
     _subPose = _handle->subscribe<sensor_msgs::MultiDOFJointState>(
-        "vive_pose", 1, callback_pose);
+        "vive_pose", 100, callback_pose, nullptr, ros::TransportHints().tcpNoDelay());
 
     //Define receiving callback for buttons
     auto callback_joy = [this](const sensor_msgs::Joy::ConstPtr& msg) {
@@ -136,7 +145,7 @@ bool ViveTracking::init(
         }
     };
     _subJoy = _handle->subscribe<sensor_msgs::Joy>(
-        "vive_joy", 10, callback_joy);
+        "vive_joy", 100, callback_joy, nullptr, ros::TransportHints().tcpNoDelay());
 
     return true;
 }
@@ -146,7 +155,7 @@ bool ViveTracking::isInit() const
     return (_handle != nullptr);
 }
 
-void ViveTracking::update()
+bool ViveTracking::update()
 {
     //Check if initialized
     if (_handle == nullptr) {
@@ -155,6 +164,7 @@ void ViveTracking::update()
     }
 
     //Receive data from ROS and call callbacks
+    _isUpdated = false;
     ros::spinOnce();
     
     //Transforms configuration
@@ -168,7 +178,14 @@ void ViveTracking::update()
     //Data processing
     for (auto& it : _container) {
         //Set as invalid if last received pose is too old
-        if ((ros::Time::now() - it.second.timeLocal).toSec() > 0.5) {
+        //or if it is not valid since enough time
+        if (
+            it.second.isLastValid &&
+            (ros::Time::now() - it.second.timeLocal).toSec() < 0.5 /*&&
+            (it.second.timeVive - it.second.timeViveAtValid).toSec() > 1.0*/
+        ) {
+            it.second.isValid = true;
+        } else {
             it.second.isValid = false;
             it.second.isButtonTrigger = false;
             it.second.isButtonPad = false;
@@ -180,7 +197,9 @@ void ViveTracking::update()
             it.second.posRaw + it.second.matRaw*translationControllerToHand;
         it.second.matHand = 
             it.second.matRaw*rotationControllerToHand;
-}
+    }
+
+    return _isUpdated;
 }
         
 const std::map<std::string, ViveTracking::Device_t>& ViveTracking::get() const
